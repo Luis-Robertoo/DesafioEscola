@@ -53,6 +53,14 @@ namespace DesafioEscola.Web.Controllers
             return Ok(result);
         }
 
+        [HttpPost]
+        [Route("Student")]
+        public async Task<IActionResult> CreateBond([FromBody] CreateStudentClassroomDTO dto)
+        {
+            var result = await _studentClassRoomService.Create(dto);
+            return Ok(result);
+        }
+
         [HttpPut]
         public async Task<IActionResult> Put([FromBody] ClassroomDTO dto)
         {

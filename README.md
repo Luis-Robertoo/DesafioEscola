@@ -4,7 +4,7 @@ Esta API Rest consiste de end-points que possibilitam:
 
 #### Autenticar
 
-- Login
+- Login (User = ADMIN e Senha = Senha@1234) 
 
 #### Alunos
 

@@ -27,6 +27,15 @@ public class DesafioEscolaMigration18041945 : Migration
             .WithColumn("Turma_Id").AsInt64().NotNullable()
             .WithColumn("Ativo").AsBoolean().NotNullable();
 
+        Insert.IntoTable("Aluno").Row(new
+        {
+            Nome = "Administrador",
+            Usuario = "ADMIN",
+            Senha = "5395546DFB06C37BC99889ACCE742B0BD5E1D48916AD4C9AFA120A884C43966A",
+            Ativo = 1
+        });
+
+
         var compKey = new[] { "Aluno_Id", "Turma_Id" };
         Create.PrimaryKey("PK_Aluno_Turma").OnTable("Aluno_Turma").Columns(compKey);
 
