@@ -1,0 +1,83 @@
+﻿@page "~/Registrar"
+@model DesafioEscola.Web.Pages.RegistrarModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <title>Registre-se</title>
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+    <link href="~/css/form.css" rel="stylesheet" />
+
+</head>
+<body>
+
+    <partial name="Shared/NavMenuPartial" />
+    <form>
+        <h3>Registre-se</h3>
+
+        <label for="name">Nome</label>
+        <input required type="text" id="name">
+        <p id="errorName"></p>
+
+        <label for="username">Usuário</label>
+        <input required type="text" id="username">
+        <p id="errorUser"></p>
+
+        <label for="password">Senha</label>
+        <input required type="password" id="password">
+        <p id="errorPassword"></p>
+
+        <button id="send" type="button">Enviar</button>
+        <button id="cancel" type="button">Voltar</button>
+    </form>
+
+    <script>
+        document.getElementById('cancel').addEventListener('click', () => {
+            window.location.href = "/Alunos";
+        }
+
+        document.getElementById('send').addEventListener('click', () => {
+            fetch("/api/Student", {
+                method: "POST",
+                body: JSON.stringify({
+                    "name": document.getElementById("name").value,
+                    "user": document.getElementById("username").value,
+                    "password": document.getElementById("password").value
+                }),
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8",
+                    "Authorization": "Bearer " + sessionStorage.getItem("token")
+                }
+            })
+            .then((response) => response.json())
+            .then((json) => {
+                
+                console.log(json)
+
+                if (json.detail == undefined && json.errors == undefined) {
+                    alert("Aluno criado com sucesso!")
+                    window.location.href = "/Alunos";
+                    return;
+                }
+
+                if (json.errors != undefined) {
+                    const errors = json.errors;
+                    document.getElementById("errorName").innerText = errors.Name != undefined ? errors.Name.join(", ") : "";
+                    document.getElementById("errorUser").innerText = errors.User != undefined ? errors.User.join(", ") : "";
+                    document.getElementById("errorPassword").innerText = errors.Password != undefined ? errors.Password.join(", ") : "";
+                }
+
+                if (json.detail != undefined) {
+                    const prev = document.getElementById("errorUser").innerText.value != undefined ? document.getElementById("errorUser").innerText.value + ", " : "";
+                    document.getElementById("errorUser").innerText = prev + json.detail;
+                }
+
+            });
+        });
+    </script>
+</body>
+</html>

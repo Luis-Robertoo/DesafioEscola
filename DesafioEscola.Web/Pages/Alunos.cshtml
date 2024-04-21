@@ -1,0 +1,53 @@
+﻿@page "~/Alunos"
+@model DesafioEscola.Web.Pages.AlunosModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,400;0,700;1,200;1,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/button.css">
+    <link rel="stylesheet" href="css/records.css">
+    <link rel="stylesheet" href="css/modal.css">
+    <script src="main.js" defer></script>
+    <title>Alunos</title>
+</head>
+<body>
+    <partial name="Shared/NavMenuPartial" />
+    <header>
+        <h1 class="header-title">Cadastro de Alunos</h1>
+    </header>
+    <main>
+        <button type="button" class="button blue mobile" id="cadastrarCliente">Cadastrar Cliente</button>
+
+        <table class="alunos">
+        </table>
+    </main>
+    <script>
+
+        console.log(sessionStorage.getItem("token"));
+     
+        fetch("/api/Student", {
+            method: "GET",
+            headers: {
+                "Content-type": "application/json; charset=UTF-8",
+                "Authorization": "Bearer " + sessionStorage.getItem("token")
+            }
+        })
+        .then((response) => response.json())
+        .then((json) => {
+            console.log(json)
+
+            if (json.detail == undefined && json.errors == undefined) {
+                
+
+            }
+            console.log(json)
+        });
+    </script>
+
+</body>
+</html>

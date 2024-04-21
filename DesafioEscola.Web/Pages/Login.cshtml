@@ -1,0 +1,93 @@
+﻿@page "~/Entrar"
+@model DesafioEscola.Web.Pages.LoginModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <title>Entrar</title>
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+    <link href="~/css/form.css" asp-append-version="true" rel="stylesheet" /> 
+
+</head>
+<body>
+
+    <partial name="Shared/NavMenuPartial" />
+    <div class="background">
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
+    <form id="form" method="post">
+        <h3>Entrar</h3>
+
+        <label for="username">Usuário</label>
+        <input type="text" id="username">
+        <p id="errorUser"></p>
+
+        <label for="password">Senha</label>
+        <input type="password" id="password">
+        <p id="errorPassword"></p>
+
+        <button id="send" type="button">Entrar</button>
+        <p id="errorLogin"></p>
+    </form>
+    <script>
+
+        document.getElementById('send').addEventListener('click', () => {
+            document.getElementById("errorUser").innerText = "";
+            document.getElementById("errorPassword").innerText = "";
+            document.getElementById("errorLogin").innerText = "";
+
+            const user = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+
+            if (user == "") {
+                document.getElementById("errorUser").innerText = "Campo Obrigatório."
+                return;
+            }
+
+            if (password == "") {
+                document.getElementById("errorPassword").innerText = "Campo Obrigatório."
+                return;
+            }
+
+            fetch("/api/Authentication/Login", {
+                method: "POST",
+                body: JSON.stringify({
+                    "user": document.getElementById("username").value,
+                    "password": document.getElementById("password").value
+                }),
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8"
+                }
+            })
+            .then((response) => {
+                const r = response;
+                if(r.status === 200){
+                    return r.text();
+                }
+                return r.json();
+
+            })
+            .then((json) => {
+                if (typeof(json) === "string") {
+                    sessionStorage.setItem("token", json);
+                    window.location.href = "/";
+                    return;
+                }
+                
+                if (json.detail != undefined) {
+                    document.getElementById("errorLogin").innerText = json.detail;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+
+
+
+
